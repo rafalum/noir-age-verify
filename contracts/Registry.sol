@@ -2,11 +2,20 @@ pragma solidity 0.8.20;
 
 import { UltraVerifier } from "circuits/contract/plonk_vk.sol";
 
-contract Kevin is UltraVerifier {
+contract Registry {
 
-    event Banana(uint256 x, uint256 y, uint256 result);
+    address public _owner;
+    address public _registrar;
 
-    uint256 public last;
+    UltraVerifier public immutable _verifier;
+
+    constructor(address verifierAddress, address registrar) {
+
+        _verifier = UltraVerifier(verifierAddress);
+        _registrar = registrar;
+        _owner = msg.sender;
+    }
+
 
     function set(bytes calldata proof, bytes32[] calldata inputs) public {
         require(this.verify(proof, inputs));
